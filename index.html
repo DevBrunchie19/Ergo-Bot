@@ -71,6 +71,8 @@
    <script>
     const messages = document.getElementById('messages');
     const controls = document.getElementById('controls');
+     const welcomeMessage = document.getElementById('welcome');
+
 
     const questions = [
       {
@@ -105,8 +107,7 @@
 
     let currentQuestion = 0;
     let userAnswers = [];
-    let welcomeMessage;
-
+   
     function appendMessage(text, sender, image = null) {
       const msg = document.createElement('div');
       msg.className = 'message ' + sender;
@@ -158,8 +159,9 @@
       currentQuestion++;
       showQuestion();
     }
- function showSummary() {
+  function showSummary() {
       messages.innerHTML = '';
+      welcomeMessage.innerHTML = "Well done on completing the self-check!";
       appendMessage("Here's a summary of your responses:", 'bot');
       userAnswers.forEach(entry => {
         appendMessage(entry.question, 'bot');
@@ -173,17 +175,14 @@
 
     function restartBot() {
       messages.innerHTML = '';
+      welcomeMessage.innerHTML = "Hi! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.";
       userAnswers = [];
       currentQuestion = 0;
-      const welcome = document.createElement('div');
-      welcome.className = 'message welcome';
-      welcome.innerHTML = "Hi! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.";
-      messages.appendChild(welcome);
-      setTimeout(showQuestion, 1000);
+      showQuestion();
     }
 
     // Start the self-check with a styled welcome message
-    restartBot();
+    showQuestion();
   </script>
 </body>
 </html>
