@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ErgoBot - Ergonomics Self-Check</title>
+  <style>
+     body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      padding: 10px;
+    }
+    #chatbox {
+      background: white;
+      max-width: 600px;
+      margin: auto;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+.welcome {
+      background-color: #b91e71;
+      color: #ffff;
+      text-align: left;
+      
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+    }
+    .bot {
+      background-color: #FCE8F2;
+      color: #00000;
+      text-align: left;
+      margin-right:10%;
+    }
+    .user {
+      background-color: #e9ecef;
+      color: #212529;
+      text-align: center;
+      margin-left:50%;
+    }
+    .buttons {
+      margin-top: 10px;
+      text-align: center;
+    }
+    button {
+      padding: 8px 15px;
+      margin: 5px;
+      background-color: #b91e71;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .tip-image {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="chatbox">
+    <div id="messages"></div>
+    <div id="controls" class="buttons"></div>
+  </div>
+
+   <script>
+    const messages = document.getElementById('messages');
+    const controls = document.getElementById('controls');
+
+    const questions = [
+      {
+        text: "Are your eyes level with the top of your monitor?",
+        tip: "Adjust your monitor so the top is at or just below eye level. Use a monitor riser or books if needed.",
+        image: "https://www.pexels.com/photo/close-up-photography-of-sleeping-tabby-cat-1056251/"
+      },
+      {
+        text: "Are your feet flat on the floor when seated?",
+        tip: "Use a footrest or adjust your chair height so your feet rest flat and your thighs are parallel to the floor.",
+        image: "https://www.pexels.com/photo/grey-fur-kitten-127028/"
+      },
+      {
+        text: "Is your keyboard at elbow height with wrists straight?",
+        tip: "Adjust your desk or chair so your elbows are at 90 degrees and your wrists remain neutral.",
+        image: "https://www.pexels.com/photo/cute-kitten-hiding-behind-a-pillow-96938/"
+      },
+      {
+        text: "Do you take regular breaks (every 30–60 minutes)?",
+        tip: "Try the 20-20-20 rule: every 20 minutes, look at something 20 feet away for 20 seconds and stand or stretch.",
+        image: "https://www.pexels.com/photo/stretching-white-cat-979247/"
+      }
+    ];
+
+    const positiveFeedback = [
+      "Great job!",
+      "Nice work keeping things ergonomic!",
+      "Awesome! Keep it up!",
+      "You're doing well, keep going!",
+      "I am in awe!"
+    ];
+
+    let currentQuestion = 0;
+
+    function appendMessage(text, sender, image = null) {
+      const msg = document.createElement('div');
+      msg.className = 'message ' + sender;
+      msg.innerText = text;
+      messages.appendChild(msg);
+
+      if (image) {
+        const img = document.createElement('img');
+        img.src = image;
+        img.alt = "Ergonomics Tip Image";
+        img.className = "tip-image";
+        messages.appendChild(img);
+      }
+
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function showQuestion() {
+      if (currentQuestion < questions.length) {
+        controls.innerHTML = '';
+        const q = questions[currentQuestion];
+        appendMessage(q.text, 'bot');
+        controls.innerHTML = `
+          <button onclick="handleAnswer(true)">Yes</button>
+          <button onclick="handleAnswer(false)">No</button>
+        `;
+      } else {
+        appendMessage("Great job going through the checklist! Stay healthy and keep adjusting as needed.", 'bot');
+        controls.innerHTML = '';
+      }
+    }
+
+    function handleAnswer(isYes) {
+      const q = questions[currentQuestion];
+      controls.innerHTML = '';
+      appendMessage(isYes ? "Yes" : "No", 'user');
+      if (!isYes) {
+        appendMessage(q.tip, 'bot', q.image);
+      } else {
+        const feedback = positiveFeedback[Math.floor(Math.random() * positiveFeedback.length)];
+        appendMessage(feedback, 'bot');
+      }
+      controls.innerHTML = `<button onclick="nextQuestion()">Next Question</button>`;
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      showQuestion();
+    }
+
+    // Start the self-check with a styled welcome message
+    const welcome = document.createElement('div');
+    welcome.className = 'message welcome';
+    welcome.innerHTML = "Hi! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.";
+    messages.appendChild(welcome);
+    setTimeout(showQuestion, 1000);
+  </script>
+</body>
+</html>
