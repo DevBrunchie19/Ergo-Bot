@@ -76,22 +76,22 @@
       {
         text: "Are your eyes level with the top of your monitor?",
         tip: "Adjust your monitor so the top is at or just below eye level. Use a monitor riser or books if needed.",
-        image: "Ergo-Cat.png"
+        image: "https://www.pexels.com/photo/close-up-photography-of-sleeping-tabby-cat-1056251/"
       },
       {
         text: "Are your feet flat on the floor when seated?",
         tip: "Use a footrest or adjust your chair height so your feet rest flat and your thighs are parallel to the floor.",
-        image: "Ergo-Cat.png"
+        image: "https://www.pexels.com/photo/grey-fur-kitten-127028/"
       },
       {
         text: "Is your keyboard at elbow height with wrists straight?",
         tip: "Adjust your desk or chair so your elbows are at 90 degrees and your wrists remain neutral.",
-        image: "Ergo-Cat.png"
+        image: "https://www.pexels.com/photo/cute-kitten-hiding-behind-a-pillow-96938/"
       },
       {
         text: "Do you take regular breaks (every 30–60 minutes)?",
         tip: "Try the 20-20-20 rule: every 20 minutes, look at something 20 feet away for 20 seconds and stand or stretch.",
-        image: "Ergo-Cat.png"
+        image: "https://www.pexels.com/photo/stretching-white-cat-979247/"
       }
     ];
 
@@ -104,6 +104,7 @@
     ];
 
     let currentQuestion = 0;
+let userAnswers = [];
 
     function appendMessage(text, sender, image = null) {
       const msg = document.createElement('div');
@@ -122,25 +123,25 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
-  function showQuestion() {
-  if (currentQuestion < questions.length) {
-    controls.innerHTML = '';
-    const q = questions[currentQuestion];
-    appendMessage(q.text, 'bot');
-    controls.innerHTML = `
-      <button onclick="handleAnswer(true)">Yes</button>
-      <button onclick="handleAnswer(false)">No</button>
-    `;
-  } else {
-    appendMessage("Great job going through the checklist! Stay healthy and keep adjusting as needed.", 'bot');
-    controls.innerHTML = `
-      <button onclick="confirmRestart()">Restart</button>
-    `;
-  }
-}
+   function showQuestion() {
+      messages.innerHTML = '';
+      if (currentQuestion < questions.length) {
+        controls.innerHTML = '';
+        const q = questions[currentQuestion];
+        appendMessage(q.text, 'bot');
+        controls.innerHTML = `
+          <button onclick="handleAnswer(true)">Yes</button>
+          <button onclick="handleAnswer(false)">No</button>
+        `;
+      } else {
+        showSummary();
+      }
+    }
+
 
     function handleAnswer(isYes) {
       const q = questions[currentQuestion];
+      userAnswers.push({ question: q.text, answer: isYes ? "Yes" : "No", tip: isYes ? null : q.tip, image: isYes ? null : q.image });
       controls.innerHTML = '';
       appendMessage(isYes ? "Yes" : "No", 'user');
       if (!isYes) {
@@ -156,38 +157,32 @@
       currentQuestion++;
       showQuestion();
     }
+ function showSummary() {
+      messages.innerHTML = '';
+      appendMessage("Here's a summary of your responses:", 'bot');
+      userAnswers.forEach(entry => {
+        appendMessage(entry.question, 'bot');
+        appendMessage(entry.answer, 'user');
+        if (entry.tip) {
+          appendMessage(entry.tip, 'bot', entry.image);
+        }
+      });
+      controls.innerHTML = '<button onclick="restartBot()">Restart</button>';
+    }
+
+    function restartBot() {
+      messages.innerHTML = '';
+      userAnswers = [];
+      currentQuestion = 0;
+      const welcome = document.createElement('div');
+      welcome.className = 'message welcome';
+      welcome.innerHTML = "Hi! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.";
+      messages.appendChild(welcome);
+      setTimeout(showQuestion, 1000);
+    }
 
     // Start the self-check with a styled welcome message
-    const welcome = document.createElement('div');
-    welcome.className = 'message welcome';
-    welcome.innerHTML = "Hi! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.";
-    messages.appendChild(welcome);
-    setTimeout(showQuestion, 1000);
-
-     function confirmRestart() {
-  controls.innerHTML = `
-    <p>Are you sure you want to restart?</p>
-    <button onclick="restartChat()">Yes, Restart</button>
-    <button onclick="cancelRestart()">Cancel</button>
-  `;
-}
-
-function restartChat() {
-  messages.innerHTML = '';
-  currentQuestion = 0;
-  const welcome = document.createElement('div');
-  welcome.className = 'message welcome';
-  welcome.innerHTML = "Hi! I'm <strong>ErgoBot</strong>. Let's go through a quick office ergonomics self-check.";
-  messages.appendChild(welcome);
-  controls.innerHTML = '';
-  setTimeout(showQuestion, 1000);
-}
-
-function cancelRestart() {
-  controls.innerHTML = `
-    <button onclick="confirmRestart()">Restart</button>
-  `;
-}
+    restartBot();
   </script>
 </body>
 </html>
