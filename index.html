@@ -210,6 +210,47 @@
       y = 10;
     }
   });
+       // Title
+doc.setFontSize(16);
+doc.text("Office Ergonomics Self-Check Summary", 10, 10);
+
+// Form fields
+doc.setFontSize(12);
+doc.text("Name:", 10, 30);
+doc.text("Employee Number:", 10, 50);
+doc.text("Email:", 10, 70);
+
+// Create form fields (AcroForms)
+doc.text('', 10, 40); // position marker
+doc.text('', 10, 60);
+doc.text('', 10, 80);
+
+doc.addField({
+  name: "nameField",
+  type: "text",
+  x: 40,
+  y: 25,
+  width: 140,
+  height: 10
+});
+
+doc.addField({
+  name: "employeeNumberField",
+  type: "text",
+  x: 60,
+  y: 45,
+  width: 120,
+  height: 10
+});
+
+doc.addField({
+  name: "emailField",
+  type: "text",
+  x: 30,
+  y: 65,
+  width: 150,
+  height: 10
+});
 
   doc.save("ErgoBot_SelfCheck_Summary.pdf");
 }
