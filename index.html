@@ -193,23 +193,23 @@
  let y = 15;
   doc.setFontSize(22);
   doc.setTextColor(185, 30, 113);  // DLT Pink
-doc.setFont("open sans", "bold");
+doc.setFont("arial", "bold");
   doc.text("ErgoBot Self-Check Summary", 20, y);
-doc.setFont("open sans", "normal"); // Reset to normal
+doc.setFont("arial", "normal"); // Reset to normal
   y += 15;
 
   userAnswers.forEach((entry, i) => {
   doc.setFontSize(18);
   doc.setTextColor(0, 0, 0);  // black
-  doc.setFont("open sans", "normal");
+  doc.setFont("arial", "normal");
   doc.text(`${i + 1}. ${entry.question}`, 20, y);
   y += 9;
 
   doc.setFontSize(18);
   doc.setTextColor(185, 30, 113);  // DLT Pink
-  doc.setFont("open sans", "bold");  // Bold for answers
+  doc.setFont("arial", "bold");  // Bold for answers
   doc.text(`Answer: ${entry.answer}`, 25, y);
-  doc.setFont("open sans", "normal"); // Reset to normal
+  doc.setFont("arial", "normal"); // Reset to normal
   y += 9;
 
   if (entry.tip) {
