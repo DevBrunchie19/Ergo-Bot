@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ErgoBot - Ergonomics Self-Check</title>
@@ -172,7 +173,10 @@
           appendMessage(entry.tip, 'bot', entry.image);
         }
       });
-      controls.innerHTML = '<button onclick="restartBot()">Restart</button>';
+      controls.innerHTML = `
+  <button onclick="restartBot()">Restart</button>
+  <button onclick="downloadPDF()">Download Summary</button>
+`;
     }
 
     function restartBot() {
@@ -182,6 +186,34 @@
       currentQuestion = 0;
       showQuestion();
     }
+     async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  let y = 10;
+  doc.setFontSize(14);
+  doc.text("ErgoBot Self-Check Summary", 10, y);
+  y += 10;
+
+  userAnswers.forEach((entry, i) => {
+    doc.setFontSize(12);
+    doc.text(`${i + 1}. ${entry.question}`, 10, y);
+    y += 7;
+    doc.text(`Answer: ${entry.answer}`, 10, y);
+    y += 7;
+    if (entry.tip) {
+      doc.text(`Tip: ${entry.tip}`, 10, y);
+      y += 10;
+    }
+    if (y > 270) {
+      doc.addPage();
+      y = 10;
+    }
+  });
+
+  doc.save("ErgoBot_SelfCheck_Summary.pdf");
+}
+
 
     // Start the self-check with a styled welcome message
     showQuestion();
